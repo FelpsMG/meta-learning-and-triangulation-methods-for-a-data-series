@@ -1,6 +1,6 @@
-function [methodRes] = triangulationMethods(select, data)
+function [methodRes] = triangulationMethods(select, data,indice)
 aux=[];
-data=triangulationData(4,data);
+data=triangulationData(indice,data);
 methodRes=[];
 %% Coordinates 
 bh = [-19.93444 -43.952222];
@@ -24,7 +24,7 @@ cont=1;
         for i=1:length(data)-1
             
            if i==length(data)-1
-              iMAD = [iMAD;aux(1,2:3) mean(aux(:,4)) mean(aux(:,5)) mean(aux(:,6)) mean(aux(:,7))];
+              iMAD = [iMAD;aux(1,2:3) mean(aux(:,4),'omitnan') mean(aux(:,5),'omitnan') mean(aux(:,6),'omitnan') mean(aux(:,7),'omitnan')];
               cont=cont+1;
               aux=[];
            end
@@ -32,121 +32,327 @@ cont=1;
                 aux = [aux;data(i,:)];   
             else
                 if i~=1
-                    iMAD = [iMAD;aux(1,2:3) mean(aux(:,4)) mean(aux(:,5)) mean(aux(:,6)) mean(aux(:,7))];
+                    iMAD = [iMAD;aux(1,2:3) mean(aux(:,4),'omitnan') mean(aux(:,5),'omitnan') mean(aux(:,6),'omitnan') mean(aux(:,7),'omitnan')];
                     cont=cont+1;
                     aux=[];       
                 end
             end
         end
+if isempty(data)
+    methodRes=[];
+else
+    switch (select)
 
-switch (select)
-    
-    case 1
-        %% Arithmetic Average
-        for i=1:length(data)
-            methodRes = [methodRes; data(i,1:3) mean(data(i,5:7))];
-        end
-        
-    case 2
-        %% Inverse Distance Weighted
-        for i=1:length(data)
-            methodRes = [methodRes;data(i,1:3) ((data(i,5)/d1 + data(i,6)/d2 + data(i,7)/d3) / ( 1/d1 + 1/d2 + 1/d3))];
-        end
-        
-    case 3
-        %% Optimized Inverse Distance Weighted
-        cont = 1;
-        aux = 1;
-        while aux<=length(data)
-            
-            if data(aux,2) == iMAD(cont,1)
-%                 yi_di = ((data(aux,5)/d1 + data(aux,6)/d2 + data(aux,7)/d3));
-%                 a_ai = (iMAD(cont,3)/iMAD(cont,4) + iMAD(cont,3)/iMAD(cont,5) + iMAD(cont,3)/iMAD(cont,6));
-%                 logh_loghi = (log(bhA)/log(florestalA) + log(bhA)/log(ibiriteA) + log(bhA)/log(seteLagoasA));
-%                 Idi = ( 1/d1 + 1/d2 + 1/d3);
-%                 teste(1) = (data(aux,5)/d1 * iMAD(cont,3)/iMAD(cont,4) * log(bhA)/log(florestalA))/(1/d1);
-%                 teste(2) = (data(aux,6)/d2 * iMAD(cont,3)/iMAD(cont,5) * log(bhA)/log(ibiriteA))/(1/d2);
-%                 teste(3) = (data(aux,7)/d3 * iMAD(cont,3)/iMAD(cont,6) * log(bhA)/log(seteLagoasA))/(1/d3);
+        case 1
+            %% Arithmetic Average
+            for i=1:length(data)
+                methodRes = [methodRes; data(i,1:3) mean(data(i,5:7),'omitnan')];
+            end
 
-                % for para calcular os resultados de cada n do somatorio
-                for i=1:3 % de 1 ate o numero de cidades vizinhas
-                    vecSum(i) = (data(aux,4+i)/d(i) * iMAD(cont,3)/iMAD(cont,3+i) * log(altitude(1))/log(altitude(1+i)))/(1/d(i));
+        case 2
+            %% Inverse Distance Weighted
+            for i=1:length(data)
+                if isnan(data(i,5)) && isnan(data(i,6)) && isnan(data(i,7))
+
+                    methodRes = [methodRes;data(i,1:3) NaN];
+
+                elseif isnan(data(i,5)) && ~(isnan(data(i,6))) && ~(isnan(data(i,7)))
+
+                    methodRes = [methodRes;data(i,1:3) (( data(i,6)/d2 + data(i,7)/d3) / ( 1/d2 + 1/d3))];
+
+                elseif ~(isnan(data(i,5))) && isnan(data(i,6)) && ~(isnan(data(i,7)))
+
+                    methodRes = [methodRes;data(i,1:3) (( data(i,5)/d1 + data(i,7)/d3) / ( 1/d1 + 1/d3))];
+
+                elseif ~(isnan(data(i,5))) && ~(isnan(data(i,6))) && isnan(data(i,7))
+
+                    methodRes = [methodRes;data(i,1:3) (( data(i,5)/d1 + data(i,6)/d2) / ( 1/d1 + 1/d2))];
+
+                elseif isnan(data(i,5)) && isnan(data(i,6)) && ~(isnan(data(i,7)))
+
+                    methodRes = [methodRes;data(i,1:3) (( data(i,7)/d3) / ( 1/d3))];
+
+                elseif isnan(data(i,5)) && ~(isnan(data(i,6))) && isnan(data(i,7))
+
+                     methodRes = [methodRes;data(i,1:3) (( data(i,6)/d2) / ( 1/d2))];
+
+                elseif ~(isnan(data(i,5))) && isnan(data(i,6)) && isnan(data(i,7))
+
+                    methodRes = [methodRes;data(i,1:3) (( data(i,5)/d1) / ( 1/d1))];
+
+                else
+                    methodRes = [methodRes;data(i,1:3) ((data(i,5)/d1 + data(i,6)/d2 + data(i,7)/d3) / ( 1/d1 + 1/d2 + 1/d3))];
                 end
-                
-                methodRes = [methodRes; data(aux,1:3) (sum(vecSum))];
-                aux = aux + 1;
-            else
-                if aux==1
+
+            end
+
+        case 3
+            %% Optimized Inverse Distance Weighted
+            cont = 1;
+            aux = 1;
+            while aux<=length(data)
+
+                if data(aux,2) == iMAD(cont,1)
+
+
+                    if isnan(data(aux,5)) && isnan(data(aux,6)) && isnan(data(aux,7))
+
+                    methodRes = [methodRes;data(i,1:3) NaN];
+
+                    elseif isnan(data(aux,5)) && ~(isnan(data(aux,6))) && ~(isnan(data(aux,7)))
+
+                        vecSum(1) = (data(aux,4+2)/d(2) * iMAD(cont,3)/iMAD(cont,3+2) * log(altitude(1))/log(altitude(1+2)))/(1/d(2));
+                        vecSum(2) = (data(aux,4+3)/d(3) * iMAD(cont,3)/iMAD(cont,3+3) * log(altitude(1))/log(altitude(1+3)))/(1/d(3));
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    elseif ~(isnan(data(aux,5))) && isnan(data(aux,6)) && ~(isnan(data(aux,7)))
+
+                        vecSum(1) = (data(aux,4+1)/d(1) * iMAD(cont,3)/iMAD(cont,3+1) * log(altitude(1))/log(altitude(1+1)))/(1/d(1));
+                        vecSum(2) = (data(aux,4+3)/d(3) * iMAD(cont,3)/iMAD(cont,3+3) * log(altitude(1))/log(altitude(1+3)))/(1/d(3));
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    elseif ~(isnan(data(aux,5))) && ~(isnan(data(aux,6))) && isnan(data(aux,7))
+
+                        for i=1:2 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = (data(aux,4+i)/d(i) * iMAD(cont,3)/iMAD(cont,3+i) * log(altitude(1))/log(altitude(1+i)))/(1/d(i));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    elseif isnan(data(aux,5)) && isnan(data(aux,6)) && ~(isnan(data(aux,7)))
+
+                        for i=3 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = (data(aux,4+i)/d(i) * iMAD(cont,3)/iMAD(cont,3+i) * log(altitude(1))/log(altitude(1+i)))/(1/d(i));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    elseif isnan(data(aux,5)) && ~(isnan(data(aux,6))) && isnan(data(aux,7))
+
+                         for i=2 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = (data(aux,4+i)/d(i) * iMAD(cont,3)/iMAD(cont,3+i) * log(altitude(1))/log(altitude(1+i)))/(1/d(i));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    elseif ~(isnan(data(aux,5))) && isnan(data(aux,6)) && isnan(data(aux,7))
+
+                        for i=1 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = (data(aux,4+i)/d(i) * iMAD(cont,3)/iMAD(cont,3+i) * log(altitude(1))/log(altitude(1+i)))/(1/d(i));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    else
+                        for i=1:3 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = (data(aux,4+i)/d(i) * iMAD(cont,3)/iMAD(cont,3+i) * log(altitude(1))/log(altitude(1+i)))/(1/d(i));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+                    end
+
+                    vecSum = [];
+                    aux = aux + 1;
+                else
+                    if aux==1
+                        aux=aux+1;
+                    else
+                        cont=cont+1;
+                    end
+
+                end
+            end
+
+        case 4
+            %% Optimized Normal Ratio
+            monthlyCorrelation=[];
+            for i=1:length(data)-1
+                if data(i,2) == data(i+1,2)
+                    aux = [aux;data(i,:)];       
+                else
+                    if i~=1
+                        r1 = corrcoef(aux(:,4),aux(:,5));
+                        r2 = corrcoef(aux(:,4),aux(:,6));
+                        r3 = corrcoef(aux(:,4),aux(:,7));
+                        monthlyCorrelation = [monthlyCorrelation;aux(1,2:3) r1(1,2) r2(1,2) r3(1,2)];
+                        aux=[];
+                    end
+                end
+            end
+            correction = monthlyCorrelation(1,:);
+            monthlyCorrelation(1,:)=[];
+            monthlyCorrelation(length(monthlyCorrelation),:) = correction;
+            cont = 1;
+            aux = 1;
+            aux2 = 0;
+            while cont<length(monthlyCorrelation)-1
+
+                if data(aux,2) == monthlyCorrelation(cont,1)
+
+                    if isnan(data(aux,5)) && isnan(data(aux,6)) && isnan(data(aux,7))
+
+                        methodRes = [methodRes;data(i,1:3) NaN];
+
+                    elseif isnan(data(aux,5)) && ~(isnan(data(aux,6))) && ~(isnan(data(aux,7)))
+
+                        vecSum(1)= abs(data(aux,4+2) * ( monthlyCorrelation(cont,2+2)^(2*((30-2)/(1-monthlyCorrelation(cont,2+2)^2)))) ); 
+                        vecSum(2)= abs(data(aux,4+3) * ( monthlyCorrelation(cont,2+3)^(2*((30-2)/(1-monthlyCorrelation(cont,2+3)^2)))) );
+                        vecSum1(1) = abs( monthlyCorrelation(cont,2+2)^(2*((30-2)/(1-monthlyCorrelation(cont,2+2)^2))));
+                        vecSum1(2) = abs( monthlyCorrelation(cont,2+3)^(2*((30-2)/(1-monthlyCorrelation(cont,2+3)^2))));
+
+                        methodRes = [methodRes; data(aux,1:3) sum(vecSum)/sum(vecSum1)];
+
+                    elseif ~(isnan(data(aux,5))) && isnan(data(aux,6)) && ~(isnan(data(aux,7)))
+
+
+                        vecSum(1)= abs(data(aux,4+1) * ( monthlyCorrelation(cont,2+1)^(2*((30-2)/(1-monthlyCorrelation(cont,2+1)^2)))) ); 
+                        vecSum(2)= abs(data(aux,4+3) * ( monthlyCorrelation(cont,2+3)^(2*((30-2)/(1-monthlyCorrelation(cont,2+3)^2)))) ); 
+                        vecSum1(1)= abs( monthlyCorrelation(cont,2+1)^(2*((30-2)/(1-monthlyCorrelation(cont,2+1)^2))));
+                        vecSum1(2)= abs( monthlyCorrelation(cont,2+3)^(2*((30-2)/(1-monthlyCorrelation(cont,2+3)^2))));
+
+                        methodRes = [methodRes; data(aux,1:3) sum(vecSum)/sum(vecSum1)];
+
+                    elseif ~(isnan(data(aux,5))) && ~(isnan(data(aux,6))) && isnan(data(aux,7))
+
+                        for j=1:2 % de 1 ate o numero de cidades vizinhas
+                            vecSum(j)= abs(data(aux,4+j) * ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2)))));  
+                            vecSum1(j) = abs( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2))));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) sum(vecSum)/sum(vecSum1)];
+
+                    elseif isnan(data(aux,5)) && isnan(data(aux,6)) && ~(isnan(data(aux,7)))
+
+                        for j=3 % de 1 ate o numero de cidades vizinhas
+                            vecSum(j)= abs(data(aux,4+j) * ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2)))));  
+                            vecSum1(j) = abs( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2))));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) sum(vecSum)/sum(vecSum1)];
+
+                    elseif isnan(data(aux,5)) && ~(isnan(data(aux,6))) && isnan(data(aux,7))
+
+                         for j=2 % de 1 ate o numero de cidades vizinhas
+                            vecSum(j)= abs(data(aux,4+j) * ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2)))));  
+                            vecSum1(j) = abs( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2))));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) sum(vecSum)/sum(vecSum1)];
+
+                    elseif ~(isnan(data(aux,5))) && isnan(data(aux,6)) && isnan(data(aux,7))
+
+                        for j=1 % de 1 ate o numero de cidades vizinhas
+                            vecSum(j)= abs(data(aux,4+j) * ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2)))));  
+                            vecSum1(j) = abs( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2))));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) sum(vecSum)/sum(vecSum1)];
+
+                    else
+                        for j=1:3 % de 1 ate o numero de cidades vizinhas
+                            vecSum(j)= abs(data(aux,4+j) * ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2)))));  
+                            vecSum1(j) = abs( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2))));
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) sum(vecSum)/sum(vecSum1)];
+
+                    end
+
+                    vecSum = [];
+                    vecSum1 = [];
+
+    %                for j=1:3 % de 1 ate o numero de cidades vizinhas
+    %                    vecSum(j)= (data(aux,4+j) * ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2)))));  
+    %                    vecSum1(j) = ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2))));
+%     %                end
+% 
+%                     methodRes = [methodRes; data(aux,1:3) sum(vecSum)/sum(vecSum1)];
                     aux=aux+1;
                 else
                     cont=cont+1;
                 end
-                
             end
-        end
-                
-    case 4
-        %% Optimized Normal Ratio
-        monthlyCorrelation=[];
-        for i=1:length(data)-1
-            if data(i,2) == data(i+1,2)
-                aux = [aux;data(i,:)];       
-            else
-                if i~=1
-                    r1 = corrcoef(aux(:,4),aux(:,5));
-                    r2 = corrcoef(aux(:,4),aux(:,6));
-                    r3 = corrcoef(aux(:,4),aux(:,7));
-                    monthlyCorrelation = [monthlyCorrelation;aux(1,2:3) r1(1,2) r2(1,2) r3(1,2)];
-                    aux=[];
-                end
-            end
-        end
-        correction = monthlyCorrelation(1,:);
-        monthlyCorrelation(1,:)=[];
-        monthlyCorrelation(length(monthlyCorrelation),:) = correction;
-        cont = 1;
-        aux = 1;
-        aux2 = 0;
-        while cont<length(monthlyCorrelation)-1
-            
-            if data(aux,2) == monthlyCorrelation(cont,1)
-                    
-               for j=1:3 % de 1 ate o numero de cidades vizinhas
-                   vecSum= (data(aux,4+j) * ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2)))) ) / ( monthlyCorrelation(cont,2+j)^(2*((30-2)/(1-monthlyCorrelation(cont,2+j)^2))));    
-               end
+        case 5  
+            %% Regional Weight
 
-                methodRes = [methodRes; data(aux,1:3) sum(vecSum)];
-                aux=aux+1;
-            else
-                cont=cont+1;
-            end
-        end
-    case 5  
-        %% Regional Weight
-        
-        cont = 1;
-        aux = 1;
-        while aux<=length(data)
-            
-            if data(aux,2) == iMAD(cont,1)
-                
-                for i=1:3 % de 1 ate o numero de cidades vizinhas
-                    vecSum(i) = ( ( iMAD(cont,3)/iMAD(cont,3+i) ) * data(aux,4+i) );
-                end
-                
-                methodRes = [methodRes; data(aux,1:3) sum(vecSum)/3];
-                aux=aux+1;
-            else
-                if aux==1
+            cont = 1;
+            aux = 1;
+            while aux<=length(data)
+
+                if data(aux,2) == iMAD(cont,1)
+
+                    if isnan(data(aux,5)) && isnan(data(aux,6)) && isnan(data(aux,7))
+
+                    methodRes = [methodRes;data(i,1:3) NaN];
+
+                    elseif isnan(data(aux,5)) && ~(isnan(data(aux,6))) && ~(isnan(data(aux,7)))
+
+                        vecSum(1) = ( ( iMAD(cont,3)/iMAD(cont,3+2) ) * data(aux,4+2) );
+                        vecSum(2) = ( ( iMAD(cont,3)/iMAD(cont,3+3) ) * data(aux,4+3) );
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))/2];
+
+                    elseif ~(isnan(data(aux,5))) && isnan(data(aux,6)) && ~(isnan(data(aux,7)))
+
+                        vecSum(1) = ( ( iMAD(cont,3)/iMAD(cont,3+1) ) * data(aux,4+1) );
+                        vecSum(2) = ( ( iMAD(cont,3)/iMAD(cont,3+3) ) * data(aux,4+3) );
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))/2];
+
+                    elseif ~(isnan(data(aux,5))) && ~(isnan(data(aux,6))) && isnan(data(aux,7))
+
+                        for i=1:2 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = ( ( iMAD(cont,3)/iMAD(cont,3+i) ) * data(aux,4+i) );
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))/2];
+
+                    elseif isnan(data(aux,5)) && isnan(data(aux,6)) && ~(isnan(data(aux,7)))
+
+                        for i=3 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = ( ( iMAD(cont,3)/iMAD(cont,3+i) ) * data(aux,4+i) );
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    elseif isnan(data(aux,5)) && ~(isnan(data(aux,6))) && isnan(data(aux,7))
+
+                         for i=2 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = ( ( iMAD(cont,3)/iMAD(cont,3+i) ) * data(aux,4+i) );
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    elseif ~(isnan(data(aux,5))) && isnan(data(aux,6)) && isnan(data(aux,7))
+
+                        for i=1 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = ( ( iMAD(cont,3)/iMAD(cont,3+i) ) * data(aux,4+i) );
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) (sum(vecSum,'omitnan'))];
+
+                    else
+                        for i=1:3 % de 1 ate o numero de cidades vizinhas
+                            vecSum(i) = ( ( iMAD(cont,3)/iMAD(cont,3+i) ) * data(aux,4+i) );
+                        end
+
+                        methodRes = [methodRes; data(aux,1:3) sum(vecSum,'omitnan')/3];
+                    end
+
+                    vecSum = [];
                     aux=aux+1;
+
                 else
-                    cont=cont+1;
+                    if aux==1
+                        aux=aux+1;
+                    else
+                        cont=cont+1;
+                    end
                 end
             end
-        end
+    end
+
 end
-
-
 
 
 

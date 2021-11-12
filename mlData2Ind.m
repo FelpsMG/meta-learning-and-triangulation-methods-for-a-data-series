@@ -11,87 +11,54 @@ switch (select)
     case 2
         ind = 'precipitacao';
         posi = 6;
-        posf = 4; %posição do indicador 
-    case 3 
+        posf = 4; %posição do indicador  
+    case 3
         ind = 'precipitacao';
         posi = 7;
-        posf = 4; %posição do indicador  
-    case 4
-        ind = 'precipitacao';
-        posi = 8;
         posf = 4; %posição do indicador 
         
         
+    case 4
+        ind = 'tmax';
+        posi = 4;
+        posf = 5; %posição do indicador 
     case 5
         ind = 'tmax';
-        posi = 4;
-        posf = 5; %posição do indicador 
+        posi = 6;
+        posf = 5; %posição do indicador  
     case 6
         ind = 'tmax';
-        posi = 6;
-        posf = 5; %posição do indicador  
-    case 7 
-        ind = 'tmax';
         posi = 7;
         posf = 5; %posição do indicador  
-    case 8
-        ind = 'tmax';
-        posi = 8;
-        posf = 5; %posição do indicador 
-        
-        
-    case 9
-        ind = 'tmed';
-        posi = 4;
-        posf = 6; %posição do indicador 
-    case 10
-        ind = 'tmed';
-        posi = 5;
-        posf = 6; %posição do indicador  
-    case 11
-        ind = 'tmed';
-        posi = 7;
-        posf = 6; %posição do indicador 
-    case 12
-        ind = 'tmed';
-        posi = 8;
-        posf = 6; %posição do indicador  
    
         
-    case 13
+    case 7
         ind = 'tmin';
         posi = 4;
-        posf = 7; %posição do indicador 
-    case 14
+        posf = 6; %posição do indicador 
+    case 8
         ind = 'tmin';
         posi = 5;
-        posf = 7; %posição do indicador 
-    case 15 
+        posf = 6; %posição do indicador 
+    case 9 
         ind = 'tmin';
-        posi = 6;
-        posf = 7; %posição do indicador  
-    case 16
-        ind = 'tmin';
-        posi = 8;
-        posf = 7; %posição do indicador 
-        
-        
-    case 17
-        ind = 'umidadeRelativa';
-        posi = 4;
-        posf = 8; %posição do indicador
-    case 18
-        ind = 'umidadeRelativa';
-        posi = 5;
-        posf = 8; %posição do indicador
-    case 19
-        ind = 'umidadeRelativa';
-        posi = 6;
-        posf = 8; %posição do indicador
-    case 20
-        ind = 'umidadeRelativa';
         posi = 7;
-        posf = 8; %posição do indicador
+        posf = 6; %posição do indicador  
+        
+        
+    case 10
+        ind = 'umidadeRelativa';
+        posi = 4;
+        posf = 7; %posição do indicador
+    case 11
+        ind = 'umidadeRelativa';
+        posi = 5;
+        posf = 7; %posição do indicador
+    case 12
+        ind = 'umidadeRelativa';
+        posi = 6;
+        posf = 7; %posição do indicador
+
     
 end
 

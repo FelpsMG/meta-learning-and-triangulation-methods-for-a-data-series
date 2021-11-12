@@ -51,12 +51,12 @@ switch (select)
 
         mdl_NN = train(net,newTrainX',trainTempMax');
         model = mdl_NN;
-    case 3
-        %% SVM
-        mdl_SVM = fitrsvm(newTrainX,trainTempMax,'KernelFunction','gaussian',...
-        'KernelScale','auto','Standardize',true, 'BoxConstraint', 0.1, 'epsilon', 2*10^-6);%'epsilon', 2*10^-6(0.0009),'BoxConstraint', 0.1(0.25)
-        
-        model = mdl_SVM;
+%     case 3
+%         %% SVM
+%         mdl_SVM = fitrsvm(newTrainX,trainTempMax,'KernelFunction','gaussian',...
+%         'KernelScale','auto','Standardize',true, 'BoxConstraint', 0.1, 'epsilon', 2*10^-6);%'epsilon', 2*10^-6(0.0009),'BoxConstraint', 0.1(0.25)
+%         
+%         model = mdl_SVM;
 end
 
 end

@@ -10,15 +10,12 @@ switch (select)
     case 2
         ind = 'tmax';
         pos = 5; %posição do indicador 
-    case 3 
-        ind = 'tmed';
+    case 3
+        ind = 'tmin';
         pos = 6; %posição do indicador 
     case 4
-        ind = 'tmin';
-        pos = 7; %posição do indicador 
-    case 5
         ind = 'umidadeRelativa';
-        pos = 8; %posição do indicador 
+        pos = 7; %posição do indicador 
     
 end
 
