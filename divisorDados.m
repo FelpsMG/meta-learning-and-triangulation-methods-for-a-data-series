@@ -1,5 +1,5 @@
 function [tri1,tri2,tri3,tri4] = divisorDados(dados,opcao)
-
+cidade='Ouricuri';
 switch (opcao)
     case 1
         
@@ -9,14 +9,15 @@ switch (opcao)
                 PrimeiroTri = [PrimeiroTri;dados(i,:)];
             end
         end
-
+        xlswrite(strcat('dados',cidade,'TRI1'),PrimeiroTri);
+        
         SegundoTri=[];
         for i = 1:length(dados)  
             if dados(i,2)==4 || dados(i,2)==5 || dados(i,2)==6
                 SegundoTri = [SegundoTri;dados(i,:)];
             end     
         end
-
+        xlswrite(strcat('dados',cidade,'TRI2'),SegundoTri);
 
         TerceiroTri=[];
         for i = 1:length(dados)  
@@ -24,7 +25,7 @@ switch (opcao)
                 TerceiroTri = [TerceiroTri;dados(i,:)]; 
             end
         end
-
+        xlswrite(strcat('dados',cidade,'TRI3'),TerceiroTri);
 
         QuartoTri=[];
         for i = 1:length(dados)  
@@ -32,7 +33,7 @@ switch (opcao)
                 QuartoTri = [QuartoTri;dados(i,:)]; 
             end     
         end
-
+        xlswrite(strcat('dados',cidade,'TRI4'),QuartoTri);
     
     case 2
     

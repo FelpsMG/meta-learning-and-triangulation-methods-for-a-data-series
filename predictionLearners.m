@@ -10,7 +10,7 @@ function [results] = predictionsLearners(MLdata)
 % triangulationMethodsV = number of triangulation methods
 % triangulationMethods = function with the triangulation methods
 
-cidade = 'bhTRI1';
+cidade = 'ouricuriTRI4';
 
 % Para normalizar os dados    
 for i = 1:length(MLdata(1,:))

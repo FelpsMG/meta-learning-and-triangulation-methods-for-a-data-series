@@ -10,7 +10,7 @@ function [results] = predictionsTriangulacao(TRIAdata)
 % triangulationMethodsV = number of triangulation methods
 % triangulationMethods = function with the triangulation methods
 
-cidade = 'bhTRI4';
+cidade = 'bhTRI1';
 
 % Para normalizar os dados    
 
@@ -25,16 +25,16 @@ indp = (round(size(TRIAdatan,1)*0.8)):(round(size(TRIAdatan,1)*1));
 triangulationMethodsV = 5;
 M1=[];
 P1 = [];
-
+T1 = TRIAdatan(indm,:);
+T2 = TRIAdatan(indp,:);
 for index=1:4
-    for t=4%triangulationMethodsV     
-            T1 = TRIAdatan(indm,:);
-            T2 = TRIAdatan(indp,:);
+    for t=1:triangulationMethodsV     
+            
             
             M1 = [triangulationMethods(t,T1,index)];
-            P1 = [triangulationMethods(t,TRIAdatan,index)];
+            P1 = [triangulationMethods(t,T2,index)];
             
-            T1=triangulationData(index, T1);
+%             T1=triangulationData(index, T1);
            
 
                 eQM(t) = 0;
@@ -61,13 +61,13 @@ for index=1:4
                       elseif t == 2
                         xlswrite(strcat(cidade,'TinversoDistanciaChuva'),erro);
                         
-                      elseif t == 2
+                      elseif t == 3
                         xlswrite(strcat(cidade,'TinversoDistanciaOtimizadoChuva'),erro);
                         
-                      elseif t == 2
+                      elseif t == 4
                         xlswrite(strcat(cidade,'TnormalRatioChuva'),erro);
                         
-                      elseif t == 2
+                      elseif t == 5
                         xlswrite(strcat(cidade,'TpesoRegionalChuva'),erro);
                         
                       end
@@ -79,13 +79,13 @@ for index=1:4
                       elseif t == 2
                         xlswrite(strcat(cidade,'TinversoDistanciaTmax'),erro);
                         
-                      elseif t == 2
+                      elseif t == 3
                         xlswrite(strcat(cidade,'TinversoDistanciaOtimizadoTmax'),erro);
                         
-                      elseif t == 2
+                      elseif t == 4
                         xlswrite(strcat(cidade,'TnormalRatioTmax'),erro);
                         
-                      elseif t== 2
+                      elseif t== 5
                         xlswrite(strcat(cidade,'TpesoRegionalTmax'),erro);
                         
                       end
@@ -97,13 +97,13 @@ for index=1:4
                       elseif t== 2
                         xlswrite(strcat(cidade,'TinversoDistanciaTmin'),erro);
                         
-                      elseif t== 2
+                      elseif t== 3
                         xlswrite(strcat(cidade,'TinversoDistanciaOtimizadoTmin'),erro);
                         
-                      elseif t== 2
+                      elseif t== 4
                         xlswrite(strcat(cidade,'TnormalRatioTmin'),erro);
                         
-                      elseif t== 2
+                      elseif t== 5
                         xlswrite(strcat(cidade,'TpesoRegionalTmin'),erro);
                         
                       end
@@ -115,13 +115,13 @@ for index=1:4
                       elseif t== 2
                         xlswrite(strcat(cidade,'TinversoDistanciaUmidade'),erro);
                         
-                      elseif t== 2
+                      elseif t== 3
                         xlswrite(strcat(cidade,'TinversoDistanciaOtimizadoUmidade'),erro);
                         
-                      elseif t== 2
+                      elseif t== 4
                         xlswrite(strcat(cidade,'TnormalRatioUmidade'),erro);
                         
-                      elseif t== 2
+                      elseif t== 5
                         xlswrite(strcat(cidade,'TpesoRegionalUmidade'),erro);
                         
                       end

@@ -1,4 +1,4 @@
-function [results] = predictions(MLdata, TRIAdata)
+function [results] = predictions2(MLdata, TRIAdata)
 
 % indl = 40% dataset for learners training
 % indm = 40% dataset for meta-learners training
@@ -10,7 +10,7 @@ function [results] = predictions(MLdata, TRIAdata)
 % triangulationMethodsV = number of triangulation methods
 % triangulationMethods = function with the triangulation methods
 
-cidade = 'belterraTRI2';
+cidade = 'ouricuriTRI2';
 
 % Para normalizar os dados    
 for i = 1:length(MLdata(1,:))

@@ -3,21 +3,33 @@ aux=[];
 data=triangulationData(indice,data);
 methodRes=[];
 %% Coordinates 
-bh = [-19.93444 -43.952222];
-florestal = [-19.99542 -44.416889];
-d1 = haversine(bh,florestal);
-ibirite = [-20.0166 -44.084722];
-d2 = haversine(bh,ibirite);
-seteLagoas = [-19.48454 -44.173798];
-d3 = haversine(bh, seteLagoas);
+% bh = [-19.93444 -43.952222];
+% florestal = [-19.99542 -44.416889];
+% d1 = haversine(bh,florestal);
+% ibirite = [-20.0166 -44.084722];
+% d2 = haversine(bh,ibirite);
+% seteLagoas = [-19.48454 -44.173798];
+% d3 = haversine(bh, seteLagoas);
+% d = [d1 d2 d3];
+belterra = [-2.6422222 -54.94388888];
+monteAlegre = [-2 -54.07638888];
+d1 = haversine(belterra,monteAlegre);
+obidos = [-1.905 -55.5236111];
+d2 = haversine(belterra,obidos);
+parintins = [-2.63 -56.73];
+d3 = haversine(belterra, parintins);
 d = [d1 d2 d3];
 %% Altitude
-bhA = 0.91547;
-florestalA = 0.75351;
-ibiriteA = 0.82208;
-seteLagoasA = 0.75368;
-altitude = [bhA florestalA ibiriteA seteLagoasA];
-
+% bhA = 0.91547;
+% florestalA = 0.75351;
+% ibiriteA = 0.82208;
+% seteLagoasA = 0.75368;
+% altitude = [bhA florestalA ibiriteA seteLagoasA];
+belterraA = 164.3;
+monteAlegreA = 100.52;
+obidosA = 54.72;
+parintinsA = 29;
+altitude = [belterraA monteAlegreA obidosA parintinsA];
 %% IMAD -> indicator monthly average dataset
 iMAD = []; 
 cont=1;

@@ -43,14 +43,14 @@ function [dadosn,dados] = cria_tabelas3(cidade)
         while cont<=m
             [ano,mes,dia] = datevec(cidade{cont,1});
             if ano == dados(i,3) && mes == dados(i,2) && dia == dados(i,1)
-               dados(i,4) = cidade{cont,2}; 
-               dados(i,5) = cidade{cont,3};
-               dados(i,6) = cidade{cont,4};
-               dados(i,7) = cidade{cont,5};
-               dados(i,8) = cidade{cont,6};
-               dados(i,9) = cidade{cont,7};
-               dados(i,10) = cidade{cont,8};
-               dados(i,11) = cidade{cont,9};
+               dados(i,4) =  cidade{cont,2}; 
+               dados(i,5) =  cidade{cont,3};
+               dados(i,6) =  cidade{cont,4};
+               dados(i,7) =  cidade{cont,5};
+%                dados(i,8) = cidade{cont,6};
+%                dados(i,9) = cidade{cont,7};
+%                dados(i,10) = cidade{cont,8};
+%                dados(i,11) = cidade{cont,9};
                j=cont+1;
                cont = 100000;
                break;
@@ -60,15 +60,15 @@ function [dadosn,dados] = cria_tabelas3(cidade)
                dados(i,5) = -99;
                dados(i,6) = -99;
                dados(i,7) = -99;
-               dados(i,8) = -99;
-               dados(i,9) = -99;
-               dados(i,10) = -99;
-               dados(i,11) = -99;
+%                dados(i,8) = -99;
+%                dados(i,9) = -99;
+%                dados(i,10) = -99;
+%                dados(i,11) = -99;
             end
             cont = cont + 1;
         end
     end
-    
+    xlswrite('dadosBarbalha',dados);
 %% para deletar dados faltantes
 %     m = 1;
 %     while m <= length(dados)
